@@ -5,7 +5,8 @@ export const router = {};
 /**
  * Changes the "page" (state) that your SPA app is currently set to
  */
-router.setState = function() {
+// state = page, back = previous webpage
+router.setState = function(state, back) {
   /**
    * - There are three states that your SPA app will have
    *    1. The home page
@@ -35,4 +36,39 @@ router.setState = function() {
    *    1. You may add as many helper functions in this file as you like
    *    2. You may modify the parameters of setState() as much as you like
    */
+
+    switch(state.page) {
+        case "setting":
+            // if we are not going backwards, add new state to stack
+            if(!back) {history.pushState(state, "", "#settings");}
+
+            document.getElementsByTagName('body')[0].className = 'settings';
+            document.getElementsByTagName('h1')[0].innerHTML = "Settings";
+            break;
+
+        case "home":
+            // if we are not going backwards, add new state to stack
+            if(!back) {history.pushState(state, "", " ");}
+            
+            document.getElementsByTagName('body')[0].className = '';
+            document.getElementsByTagName('h1')[0].innerHTML = 'Journal Entries';
+            break;
+
+        case "post":
+            if(!back) { history.pushState(state, "", '#' + (state.page).toLowerCase() + state.num); }
+
+            let body = document.getElementsByTagName('body')[0];
+            body.className = 'single-entry';
+            document.getElementsByTagName('h1')[0].innerHTML = 'Entry ' + state.num;
+
+            let newEntry = document.createElement('entry-page');
+            newEntry.entry = state.entry;
+
+            //Gets both entries
+            let entries = document.getElementsByTagName("entry-page");
+            body.appendChild(newEntry);
+            body.removeChild(entries[0]);
+            break;
+    }
+
 }
